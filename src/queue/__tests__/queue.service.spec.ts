@@ -4,7 +4,7 @@ import { getQueueToken } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { QueueEnum } from '../enums/queue.enum';
 import { UploadJobData } from '../../upload/upload.processor';
-import { createQueueMock } from '../__mocks__/queue.mocks';
+import { createQueueMock, jobsMock } from '../__mocks__/queue.mocks';
 
 describe('QueueService', () => {
   let service: QueueService;
@@ -18,7 +18,7 @@ describe('QueueService', () => {
           provide: getQueueToken(QueueEnum.FILE_UPLOAD),
           useValue: {
             add: jest.fn(),
-            getJobs: jest.fn(),
+            getJobs: jest.fn().mockResolvedValue(jobsMock),
           },
         },
       ],
@@ -39,5 +39,11 @@ describe('QueueService', () => {
     await service.add(createQueueMock);
 
     expect(queueMock.add).toHaveBeenCalledWith(createQueueMock);
+  });
+
+  it('should get active or waiting jobs from the queue', async () => {
+    const jobStatus = await service.getJobStatus();
+
+    expect(jobStatus.activeJobs).toEqual(jobsMock);
   });
 });
