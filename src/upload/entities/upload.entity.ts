@@ -1,18 +1,20 @@
+import { Payment } from '../../payment/entities/payment.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
+  Repository,
   UpdateDateColumn,
 } from 'typeorm';
+
+export type UploadRepository = Repository<Upload>;
 
 @Entity({ name: 'uploads' })
 export class Upload {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column({ name: 'name', nullable: false })
-  name: string;
 
   @Column({ name: 'confirmed', nullable: false, default: false })
   confirmed: boolean;
@@ -28,4 +30,7 @@ export class Upload {
     name: 'updated_at',
   })
   updated_at: Date;
+
+  @ManyToOne(() => Payment, (payment) => payment.upload)
+  payments?: Payment[];
 }

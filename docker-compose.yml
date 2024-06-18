@@ -11,3 +11,9 @@ services:
     environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=payment-file-manager
+  redis:
+    image: redis
+    container_name: payment-file-manager-redis
+    ports:
+      - '6379:6379'
+    command: redis-server --requirepass 'redis'

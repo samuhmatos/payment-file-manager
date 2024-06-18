@@ -18,6 +18,5 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false
   },
-  "include": ["src", ".docker/migrations"],
   "exclude": ["node_modules", "build", "dist", ".docker"]
 }
