@@ -48,7 +48,9 @@ export class Payment {
   })
   updated_at: Date;
 
-  @ManyToOne(() => Audit, (audit) => audit.payments)
+  @ManyToOne(() => Audit, (audit) => audit.payments, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'audit_id', referencedColumnName: 'id' })
   audit?: Audit;
 }

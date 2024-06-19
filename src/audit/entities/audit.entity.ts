@@ -3,7 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Repository,
   UpdateDateColumn,
@@ -31,6 +31,6 @@ export class Audit {
   })
   updated_at: Date;
 
-  @ManyToOne(() => Payment, (payment) => payment.audit)
+  @OneToMany(() => Payment, (payment) => payment.audit)
   payments?: Payment[];
 }
