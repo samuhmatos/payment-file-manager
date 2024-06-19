@@ -32,6 +32,7 @@ Para garantir que o ambiente esteja devidamente configurado, siga os passos abai
    ```bash
    cp .env.example .env
    docker-compose up -d
+   npm install
    npm run build
    npm run start:prod
    ```
