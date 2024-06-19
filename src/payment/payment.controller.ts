@@ -17,11 +17,11 @@ export class PaymentController {
 
   @Get()
   async paginate(
-    @Query('upload_id') upload_id?: number,
+    @Query('audit_id') audit_id?: number,
     @Query('page') page?: number,
   ) {
     return this.paymentService.paginate({
-      upload_id,
+      audit_id,
       page,
     });
   }

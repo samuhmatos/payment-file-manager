@@ -1,16 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
-import { UploadModule } from './upload/upload.module';
 import { PaymentModule } from './payment/payment.module';
 import { BullModule } from '@nestjs/bull';
 import { QueueModule } from './queue/queue.module';
+import { AuditModule } from './audit/audit.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     DatabaseModule,
-    UploadModule,
     PaymentModule,
     BullModule.forRoot({
       redis: {
@@ -20,6 +19,7 @@ import { QueueModule } from './queue/queue.module';
       },
     }),
     QueueModule,
+    AuditModule,
   ],
 })
 export class AppModule {}

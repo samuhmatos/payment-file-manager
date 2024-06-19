@@ -1,3 +1,4 @@
+import { Audit } from '../../audit/entities/audit.entity';
 import { Payment } from '../entities/payment.entity';
 
 export class ReturnPaymentDto {
@@ -9,6 +10,8 @@ export class ReturnPaymentDto {
   total: number;
   birth_date: string;
 
+  audit?: Audit;
+
   constructor(payment: Payment) {
     this.id = payment.id;
     this.name = payment.name;
@@ -17,5 +20,7 @@ export class ReturnPaymentDto {
     this.cpf = payment.cpf;
     this.total = payment.total;
     this.birth_date = payment.birth_date;
+
+    this.audit = payment.audit;
   }
 }

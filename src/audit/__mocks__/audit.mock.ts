@@ -1,7 +1,7 @@
-import { Upload } from '../entities/upload.entity';
-import { UploadFileDto } from '../dtos/upload-file.dto';
+import { CreateAuditDto } from '../dtos/create-audit.dto';
+import { Audit } from '../entities/audit.entity';
 
-export const uploadMock: Upload = {
+export const auditMock: Audit = {
   id: 1,
   confirmed: false,
   created_at: new Date(),
@@ -13,7 +13,7 @@ export const fileContentMock =
 export const invalidFileContentMock =
   'Kathryne Lockma0051\uFFFD\u0000      845 Fahey Summit East Dillon1162676\uFFFD\u00001422000000000007638220230321\r\n';
 
-export const uploadFileMock: UploadFileDto = {
+export const uploadFileMock: CreateAuditDto = {
   file: {
     buffer: Buffer.from(fileContentMock, 'utf-8'),
     fieldname: '',
@@ -28,7 +28,7 @@ export const uploadFileMock: UploadFileDto = {
   },
 };
 
-export const uploadInvalidFileContentMock: UploadFileDto = {
+export const uploadInvalidFileContentMock: CreateAuditDto = {
   file: {
     buffer: Buffer.from(invalidFileContentMock, 'utf-8'),
     fieldname: '',

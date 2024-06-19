@@ -3,8 +3,8 @@ import { QueueService } from '../queue.service';
 import { getQueueToken } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { QueueEnum } from '../enums/queue.enum';
-import { UploadJobData } from '../../upload/upload.processor';
 import { createQueueMock, jobsMock } from '../__mocks__/queue.mocks';
+import { UploadJobData } from '../../audit/audit.processor';
 
 describe('QueueService', () => {
   let service: QueueService;

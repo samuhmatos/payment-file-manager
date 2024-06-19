@@ -1,11 +1,11 @@
 import { Job } from 'bull';
-import { UploadJobData } from '../upload.processor';
-import { fileContentMock, uploadMock } from './upload.mocks';
+import { auditMock, fileContentMock } from './audit.mock';
+import { UploadJobData } from '../audit.processor';
 
 export const createUploadProcessor: Job<UploadJobData> = {
   id: '1',
   data: {
     fileContent: fileContentMock,
-    upload_id: uploadMock.id,
+    audit_id: auditMock.id,
   },
 } as Job<UploadJobData>;

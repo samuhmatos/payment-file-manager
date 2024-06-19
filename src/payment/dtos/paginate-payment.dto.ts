@@ -1,4 +1,4 @@
 export class PaginatePaymentDto {
   page?: number;
-  upload_id?: number;
+  audit_id?: number;
 }

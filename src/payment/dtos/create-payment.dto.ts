@@ -4,6 +4,6 @@ export class CreatePaymentDto {
   address: string;
   cpf: string;
   total: number;
-  upload_id: number;
+  audit_id: number;
   birth_date: string;
 }

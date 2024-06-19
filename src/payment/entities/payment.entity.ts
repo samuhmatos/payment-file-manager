@@ -1,4 +1,4 @@
-import { Upload } from '../../upload/entities/upload.entity';
+import { Audit } from '../../audit/entities/audit.entity';
 import {
   Column,
   CreateDateColumn,
@@ -36,7 +36,7 @@ export class Payment {
   birth_date: string;
 
   @Column({ nullable: false, type: 'int' })
-  upload_id: number;
+  audit_id: number;
 
   @CreateDateColumn({
     type: 'timestamp',
@@ -48,7 +48,7 @@ export class Payment {
   })
   updated_at: Date;
 
-  @ManyToOne(() => Upload, (upload) => upload.payments)
-  @JoinColumn({ name: 'upload_id', referencedColumnName: 'id' })
-  upload?: Upload;
+  @ManyToOne(() => Audit, (audit) => audit.payments)
+  @JoinColumn({ name: 'audit_id', referencedColumnName: 'id' })
+  audit?: Audit;
 }

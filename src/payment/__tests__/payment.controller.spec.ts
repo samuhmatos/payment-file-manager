@@ -40,7 +40,7 @@ describe('PaymentController', () => {
   describe('paginate', () => {
     it('should call PaymentService.paginate with correct parameters', async () => {
       const result = await controller.paginate(
-        queryPaginateMock.upload_id,
+        queryPaginateMock.audit_id,
         queryPaginateMock.page,
       );
 
@@ -48,13 +48,13 @@ describe('PaymentController', () => {
       expect(paymentService.paginate).toHaveBeenCalledWith(queryPaginateMock);
     });
 
-    it('should throw BadRequestException if upload_id is not provided', async () => {
+    it('should throw BadRequestException if audit_id is not provided', async () => {
       jest
         .spyOn(paymentService, 'paginate')
-        .mockRejectedValue(new BadRequestException('upload_id é obrigatório'));
+        .mockRejectedValue(new BadRequestException('audit_id é obrigatório'));
 
       await expect(controller.paginate(undefined, 1)).rejects.toThrow(
-        new BadRequestException('upload_id é obrigatório'),
+        new BadRequestException('audit_id é obrigatório'),
       );
     });
   });

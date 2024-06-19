@@ -2,7 +2,7 @@ import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { QueueEnum } from './enums/queue.enum';
 import { Job, Queue } from 'bull';
-import { UploadJobData } from '../upload/upload.processor';
+import { UploadJobData } from '../audit/audit.processor';
 
 export type JobStatus = {
   activeJobs: Job<UploadJobData>[];

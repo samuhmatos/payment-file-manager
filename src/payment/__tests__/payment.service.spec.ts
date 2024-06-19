@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import {
   createPaymentMock,
   paymentMock,
+  paymentWithUploadMock,
   updatePaymentMock,
 } from '../__mocks__/payment.mock';
 import { QueueService } from '../../queue/queue.service';
@@ -16,9 +17,9 @@ import {
   paginatePaymentMock,
   paginateResultMock,
 } from '../__mocks__/paginate.mock';
-import { uploadMock } from '../../upload/__mocks__/upload.mocks';
 import { emptyJobsMock, jobsMock } from '../../queue/__mocks__/queue.mocks';
 import { returnDeleteMock } from '../../__mocks__/return-delete.mock';
+import { auditMock } from '../../audit/__mocks__/audit.mock';
 
 describe('PaymentService', () => {
   let service: PaymentService;
@@ -34,7 +35,7 @@ describe('PaymentService', () => {
           useValue: {
             save: jest.fn().mockResolvedValue([paymentMock]),
             findAndCount: jest.fn().mockResolvedValue(paginateFindAndCountMock),
-            findOneBy: jest.fn().mockResolvedValue(paymentMock),
+            findOne: jest.fn().mockResolvedValue(paymentWithUploadMock),
             delete: jest.fn().mockResolvedValue(returnDeleteMock),
           },
         },
@@ -68,13 +69,13 @@ describe('PaymentService', () => {
   });
 
   describe('paginate', () => {
-    it('should throw BadRequestException if upload_id is not provided', async () => {
+    it('should throw BadRequestException if audit_id is not provided', async () => {
       await expect(
         service.paginate(invalidPaginatePaymentMock),
-      ).rejects.toThrow(new BadRequestException('upload_id é obrigatório'));
+      ).rejects.toThrow(new BadRequestException('audit_id é obrigatório'));
     });
 
-    it('should throw BadRequestException if there are active or waiting jobs with the same upload_id', async () => {
+    it('should throw BadRequestException if there are active or waiting jobs with the same audit_id', async () => {
       await expect(service.paginate(paginatePaymentMock)).rejects.toThrow(
         new BadRequestException(
           'Os dados enviados ainda estão sendo processados!',
@@ -91,7 +92,7 @@ describe('PaymentService', () => {
       expect(paymentRepository.findAndCount).toHaveBeenCalledWith({
         take: DEFAULT_PER_PAGE,
         skip: 0,
-        where: { upload_id: uploadMock.id },
+        where: { audit_id: auditMock.id },
       });
     });
   });
@@ -100,11 +101,11 @@ describe('PaymentService', () => {
     it('should return payment', async () => {
       const payment = await service.findById(paymentMock.id);
 
-      expect(payment).toEqual(paymentMock);
+      expect(payment).toEqual(paymentWithUploadMock);
     });
 
     it('should return exception if payment id is not found', async () => {
-      jest.spyOn(paymentRepository, 'findOneBy').mockResolvedValue(undefined);
+      jest.spyOn(paymentRepository, 'findOne').mockResolvedValue(undefined);
 
       expect(service.findById(paymentMock.id)).rejects.toThrow(
         NotFoundException,
@@ -118,17 +119,17 @@ describe('PaymentService', () => {
 
       const payment = await service.update(
         updatePaymentMock,
-        paymentMock.upload_id,
+        paymentMock.audit_id,
       );
 
       expect(payment).toEqual(paymentMock);
     });
 
     it('should throw exception if payment id not found', async () => {
-      jest.spyOn(paymentRepository, 'findOneBy').mockResolvedValue(undefined);
+      jest.spyOn(paymentRepository, 'findOne').mockResolvedValue(undefined);
 
       expect(
-        service.update(updatePaymentMock, paymentMock.upload_id),
+        service.update(updatePaymentMock, paymentMock.audit_id),
       ).rejects.toThrow(NotFoundException);
     });
   });
@@ -141,9 +142,9 @@ describe('PaymentService', () => {
     });
 
     it('should throw exception if payment id not found', async () => {
-      jest.spyOn(paymentRepository, 'findOneBy').mockResolvedValue(undefined);
+      jest.spyOn(paymentRepository, 'findOne').mockResolvedValue(undefined);
 
-      expect(service.remove(paymentMock.upload_id)).rejects.toThrow(
+      expect(service.remove(paymentMock.audit_id)).rejects.toThrow(
         NotFoundException,
       );
     });

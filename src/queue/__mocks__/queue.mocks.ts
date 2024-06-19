@@ -1,15 +1,15 @@
 import { Job } from 'bull';
-import { fileContentMock } from '../../upload/__mocks__/upload.mocks';
-import { UploadJobData } from '../../upload/upload.processor';
 import { JobStatus } from '../queue.service';
+import { UploadJobData } from '../../audit/audit.processor';
+import { fileContentMock } from '../../audit/__mocks__/audit.mock';
 
 export const createQueueMock: UploadJobData = {
   fileContent: fileContentMock,
-  upload_id: 1,
+  audit_id: 1,
 };
 
 export const activeJobsMock: Job<UploadJobData>[] = [
-  { data: { upload_id: 1 } },
+  { data: { audit_id: 1 } },
 ] as Job<UploadJobData>[];
 
 export const jobsMock: JobStatus = {

@@ -9,10 +9,10 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-export type UploadRepository = Repository<Upload>;
+export type AuditRepository = Repository<Audit>;
 
-@Entity({ name: 'uploads' })
-export class Upload {
+@Entity({ name: 'audits' })
+export class Audit {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -31,6 +31,6 @@ export class Upload {
   })
   updated_at: Date;
 
-  @ManyToOne(() => Payment, (payment) => payment.upload)
+  @ManyToOne(() => Payment, (payment) => payment.audit)
   payments?: Payment[];
 }

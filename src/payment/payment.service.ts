@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -27,9 +28,9 @@ export class PaymentService {
     return this.paymentRepository.save(createPaymentDto);
   }
 
-  async paginate({ page, upload_id }: PaginatePaymentDto): Promise<Pagination> {
-    if (!upload_id) {
-      throw new BadRequestException('upload_id é obrigatório');
+  async paginate({ page, audit_id }: PaginatePaymentDto): Promise<Pagination> {
+    if (!audit_id) {
+      throw new BadRequestException('audit_id é obrigatório');
     }
 
     if (!page || Number.isNaN(page)) page = DEFAULT_PAGE;
@@ -39,8 +40,8 @@ export class PaymentService {
 
     if (activeJobs.length > 0 || waitingJobs.length > 0) {
       const jobsWithSameUploadId = activeJobs
-        .filter((job) => job.data.upload_id === upload_id)
-        .concat(waitingJobs.filter((job) => job.data.upload_id === upload_id));
+        .filter((job) => job.data.audit_id === audit_id)
+        .concat(waitingJobs.filter((job) => job.data.audit_id === audit_id));
 
       if (jobsWithSameUploadId.length > 0) {
         throw new BadRequestException(
@@ -53,7 +54,7 @@ export class PaymentService {
       take: DEFAULT_PER_PAGE,
       skip,
       where: {
-        upload_id,
+        audit_id,
       },
     });
 
@@ -69,7 +70,10 @@ export class PaymentService {
   }
 
   async findById(id: number): Promise<Payment> {
-    const payment = await this.paymentRepository.findOneBy({ id });
+    const payment = await this.paymentRepository.findOne({
+      where: { id },
+      relations: { audit: true },
+    });
 
     if (!payment) {
       throw new NotFoundException('Pagamento não encontrado');
@@ -81,6 +85,12 @@ export class PaymentService {
   async update(params: UpdatePaymentDto, id: number) {
     const payment = await this.findById(id);
 
+    if (payment.audit.confirmed) {
+      throw new ForbiddenException(
+        'O pagamento não tem autorização para ser alterado!',
+      );
+    }
+
     return this.paymentRepository.save({
       ...payment,
       ...params,
@@ -88,7 +98,13 @@ export class PaymentService {
   }
 
   async remove(id: number) {
-    await this.findById(id);
+    const payment = await this.findById(id);
+
+    if (payment.audit.confirmed) {
+      throw new ForbiddenException(
+        'O pagamento não tem autorização para ser alterado!',
+      );
+    }
 
     return this.paymentRepository.delete({
       id,

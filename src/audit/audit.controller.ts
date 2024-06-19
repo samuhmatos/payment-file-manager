@@ -1,21 +1,22 @@
 import {
   Controller,
   FileTypeValidator,
+  Param,
   ParseFilePipe,
   Post,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
+import { AuditService } from './audit.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { UploadService } from './upload.service';
 
-@Controller('upload')
-export class UploadController {
-  constructor(private uploadService: UploadService) {}
+@Controller('audit')
+export class AuditController {
+  constructor(private readonly auditService: AuditService) {}
 
   @Post()
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(
+  async create(
     @UploadedFile(
       new ParseFilePipe({
         validators: [
@@ -25,6 +26,11 @@ export class UploadController {
     )
     file: Express.Multer.File,
   ) {
-    return this.uploadService.uploadFile({ file });
+    return this.auditService.create({ file });
+  }
+
+  @Post('/:id')
+  async remove(@Param('id') id: number) {
+    return this.auditService.confirm(id);
   }
 }

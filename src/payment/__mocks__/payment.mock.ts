@@ -1,4 +1,4 @@
-import { uploadMock } from '../../upload/__mocks__/upload.mocks';
+import { auditMock } from '../../audit/__mocks__/audit.mock';
 import { CreatePaymentDto } from '../dtos/create-payment.dto';
 import { UpdatePaymentDto } from '../dtos/update-payment.dto';
 import { Payment } from '../entities/payment.entity';
@@ -11,9 +11,14 @@ export const paymentMock: Payment = {
   cpf: '11626761422',
   total: 76382,
   birth_date: '20230321',
-  upload_id: uploadMock.id,
+  audit_id: auditMock.id,
   created_at: new Date(),
   updated_at: new Date(),
+};
+
+export const paymentWithUploadMock: Payment = {
+  ...paymentMock,
+  audit: auditMock,
 };
 
 export const createPaymentMock: CreatePaymentDto[] = [
@@ -23,7 +28,7 @@ export const createPaymentMock: CreatePaymentDto[] = [
     address: paymentMock.address,
     cpf: paymentMock.cpf,
     total: paymentMock.total,
-    upload_id: paymentMock.upload_id,
+    audit_id: paymentMock.audit_id,
     birth_date: paymentMock.birth_date,
   },
 ];
