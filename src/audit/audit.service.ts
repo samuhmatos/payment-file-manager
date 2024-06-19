@@ -6,6 +6,8 @@ import { QueueService } from '../queue/queue.service';
 import { UploadJobData } from './audit.processor';
 import { CreatePaymentDto } from '../payment/dtos/create-payment.dto';
 import { PaymentService } from '../payment/payment.service';
+import { ReturnPaymentDto } from 'src/payment/dtos/return-payment.dto';
+import { json2csv } from 'json-2-csv';
 
 @Injectable()
 export class AuditService {
@@ -86,13 +88,30 @@ export class AuditService {
     });
   }
 
-  async findById(id: number) {
-    const audit = await this.auditRepository.findOne({ where: { id } });
+  async findById(id: number, isRelation = false) {
+    const audit = await this.auditRepository.findOne({
+      where: { id },
+      relations: {
+        payments: isRelation,
+      },
+    });
 
     if (!audit) {
       throw new NotFoundException('Auditoria não encontrada');
     }
 
     return audit;
+  }
+
+  async exportToCsv(id: number) {
+    const audit = await this.findById(id, true);
+
+    const payments = audit.payments.map(
+      (payment) => new ReturnPaymentDto(payment),
+    );
+
+    const csv = json2csv(payments);
+
+    return csv;
   }
 }

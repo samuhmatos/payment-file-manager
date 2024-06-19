@@ -1,6 +1,8 @@
 import {
   Controller,
   FileTypeValidator,
+  Get,
+  Header,
   Param,
   ParseFilePipe,
   Post,
@@ -32,5 +34,12 @@ export class AuditController {
   @Post('/:id')
   async remove(@Param('id') id: number) {
     return this.auditService.confirm(id);
+  }
+
+  @Get('/export/:id')
+  @Header('Content-Type', 'text/csv')
+  @Header('Content-Disposition', 'attachment; filename=audit.csv')
+  async exportToCsv(@Param('id') id: number) {
+    return this.auditService.exportToCsv(id);
   }
 }

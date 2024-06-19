@@ -21,6 +21,6 @@ export class ReturnPaymentDto {
     this.total = payment.total;
     this.birth_date = payment.birth_date;
 
-    this.audit = payment.audit;
+    if (payment.audit) this.audit = payment.audit;
   }
 }
