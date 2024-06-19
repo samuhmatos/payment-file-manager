@@ -3,9 +3,13 @@ import { DEFAULT_PER_PAGE, PaymentService } from '../payment.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Payment, PaymentRepository } from '../entities/payment.entity';
 import { Repository } from 'typeorm';
-import { createPaymentMock, paymentMock } from '../__mocks__/payment.mock';
+import {
+  createPaymentMock,
+  paymentMock,
+  updatePaymentMock,
+} from '../__mocks__/payment.mock';
 import { QueueService } from '../../queue/queue.service';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import {
   invalidPaginatePaymentMock,
   paginateFindAndCountMock,
@@ -29,6 +33,7 @@ describe('PaymentService', () => {
           useValue: {
             save: jest.fn().mockResolvedValue([paymentMock]),
             findAndCount: jest.fn().mockResolvedValue(paginateFindAndCountMock),
+            findOneBy: jest.fn().mockResolvedValue(paymentMock),
           },
         },
         {
@@ -86,6 +91,43 @@ describe('PaymentService', () => {
         skip: 0,
         where: { upload_id: uploadMock.id },
       });
+    });
+  });
+
+  describe('findById', () => {
+    it('should return payment', async () => {
+      const payment = await service.findById(paymentMock.id);
+
+      expect(payment).toEqual(paymentMock);
+    });
+
+    it('should return exception if payment id is not found', async () => {
+      jest.spyOn(paymentRepository, 'findOneBy').mockResolvedValue(undefined);
+
+      expect(service.findById(paymentMock.id)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+  });
+
+  describe('update', () => {
+    it('should update the payment', async () => {
+      jest.spyOn(paymentRepository, 'save').mockResolvedValue(paymentMock);
+
+      const payment = await service.update(
+        updatePaymentMock,
+        paymentMock.upload_id,
+      );
+
+      expect(payment).toEqual(paymentMock);
+    });
+
+    it('should throw exception if payment id not found', async () => {
+      jest.spyOn(paymentRepository, 'findOneBy').mockResolvedValue(undefined);
+
+      expect(
+        service.update(updatePaymentMock, paymentMock.upload_id),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 });

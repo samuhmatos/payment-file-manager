@@ -1,11 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PaymentController } from '../payment.controller';
 import { PaymentService } from '../payment.service';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import {
   paginateResultMock,
   queryPaginateMock,
 } from '../__mocks__/paginate.mock';
+import { paymentMock, updatePaymentMock } from '../__mocks__/payment.mock';
 
 describe('PaymentController', () => {
   let controller: PaymentController;
@@ -19,6 +20,7 @@ describe('PaymentController', () => {
           provide: PaymentService,
           useValue: {
             paginate: jest.fn().mockResolvedValue(paginateResultMock),
+            update: jest.fn().mockResolvedValue(paymentMock),
           },
         },
       ],
@@ -52,6 +54,27 @@ describe('PaymentController', () => {
       await expect(controller.paginate(undefined, 1)).rejects.toThrow(
         new BadRequestException('upload_id é obrigatório'),
       );
+    });
+  });
+
+  describe('update', () => {
+    it('should update', async () => {
+      const payment = await controller.update(
+        paymentMock.id,
+        updatePaymentMock,
+      );
+
+      expect(payment).toEqual(paymentMock);
+    });
+
+    it('should throw exception if id not found', async () => {
+      jest
+        .spyOn(paymentService, 'update')
+        .mockRejectedValue(new NotFoundException());
+
+      expect(
+        controller.update(paymentMock.id, updatePaymentMock),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 });

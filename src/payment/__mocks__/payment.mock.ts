@@ -1,5 +1,6 @@
 import { uploadMock } from '../../upload/__mocks__/upload.mocks';
 import { CreatePaymentDto } from '../dtos/create-payment.dto';
+import { UpdatePaymentDto } from '../dtos/update-payment.dto';
 import { Payment } from '../entities/payment.entity';
 
 export const paymentMock: Payment = {
@@ -26,3 +27,12 @@ export const createPaymentMock: CreatePaymentDto[] = [
     birth_date: paymentMock.birth_date,
   },
 ];
+
+export const updatePaymentMock: UpdatePaymentDto = {
+  name: paymentMock.name,
+  address: paymentMock.address,
+  age: paymentMock.age,
+  birth_date: paymentMock.birth_date,
+  cpf: paymentMock.cpf,
+  total: paymentMock.total,
+};

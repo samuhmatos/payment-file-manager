@@ -1,10 +1,15 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Payment, PaymentRepository } from './entities/payment.entity';
 import { CreatePaymentDto } from './dtos/create-payment.dto';
 import { PaginatePaymentDto } from './dtos/paginate-payment.dto';
 import { Pagination } from './dtos/return-paginate-payment.dto';
 import { QueueService } from '../queue/queue.service';
+import { UpdatePaymentDto } from './dtos/update-payment.dto';
 
 export const DEFAULT_PAGE = 1;
 export const DEFAULT_PER_PAGE = 20;
@@ -61,5 +66,24 @@ export class PaymentService {
       },
       payments,
     );
+  }
+
+  async findById(id: number): Promise<Payment> {
+    const payment = await this.paymentRepository.findOneBy({ id });
+
+    if (!payment) {
+      throw new NotFoundException('Pagamento não encontrado');
+    }
+
+    return payment;
+  }
+
+  async update(params: UpdatePaymentDto, id: number) {
+    const payment = await this.findById(id);
+
+    return this.paymentRepository.save({
+      ...payment,
+      ...params,
+    });
   }
 }

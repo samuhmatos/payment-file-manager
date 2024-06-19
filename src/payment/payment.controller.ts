@@ -1,5 +1,6 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put, Query } from '@nestjs/common';
 import { PaymentService } from './payment.service';
+import { UpdatePaymentDto } from './dtos/update-payment.dto';
 
 @Controller('payment')
 export class PaymentController {
@@ -14,5 +15,13 @@ export class PaymentController {
       upload_id,
       page,
     });
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id') id: number,
+    @Body() updatePaymentDto: UpdatePaymentDto,
+  ) {
+    return this.paymentService.update(updatePaymentDto, id);
   }
 }
