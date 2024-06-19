@@ -1,0 +1,207 @@
+{
+	"info": {
+		"_postman_id": "972d1e77-1bab-45ae-9972-d9accaf947a8",
+		"name": "Desafio Brasil Card",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24761555"
+	},
+	"item": [
+		{
+			"name": "upload file",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/D:/Workspace/Desafios/BrasilCard/desafio-backend/joao_file/pagamentos_20231011.rem"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/audit",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"audit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "paginate",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/payment?audit_id=1",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"payment"
+					],
+					"query": [
+						{
+							"key": "audit_id",
+							"value": "1"
+						},
+						{
+							"key": "page",
+							"value": "1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update payment",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"birth_date\": \"2024-06-18\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/payment/1",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"payment",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "confirm audit",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/audit/1",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"audit",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "export to csv",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/audit/export/1",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"audit",
+						"export",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "remove payment",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/payment/1",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"payment",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
