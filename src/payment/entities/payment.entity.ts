@@ -26,7 +26,7 @@ export class Payment {
   @Column({ nullable: false, length: '34', type: 'varchar' })
   address: string;
 
-  @Column({ nullable: false, type: 'varchar', length: '11' })
+  @Column({ nullable: false, type: 'varchar', length: '14' })
   cpf: string;
 
   @Column({ nullable: false, type: 'float' })

@@ -10,11 +10,7 @@ import { auditMock } from '../../audit/__mocks__/audit.mock';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Audit, AuditRepository } from '../entities/audit.entity';
 import { PaymentService } from '../../payment/payment.service';
-import { createUploadProcessor } from '../__mocks__/audit-processor.mock';
-import {
-  createPaymentMock,
-  paymentMock,
-} from '../../payment/__mocks__/payment.mock';
+import { paymentMock } from '../../payment/__mocks__/payment.mock';
 import { NotFoundException } from '@nestjs/common';
 
 describe('AuditService', () => {
@@ -85,14 +81,6 @@ describe('AuditService', () => {
       expect(createdUpload).toEqual({
         message: 'Os dados estão sendo processados!',
       });
-    });
-  });
-
-  describe('uploadFile', () => {
-    it('should process the file and call paymentService.create', async () => {
-      await service.uploadFile(createUploadProcessor.data);
-
-      expect(paymentService.create).toHaveBeenCalledWith(createPaymentMock);
     });
   });
 

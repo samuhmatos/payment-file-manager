@@ -11,6 +11,9 @@ import { PaginatePaymentDto } from './dtos/paginate-payment.dto';
 import { Pagination } from './dtos/return-paginate-payment.dto';
 import { QueueService } from '../queue/queue.service';
 import { UpdatePaymentDto } from './dtos/update-payment.dto';
+import { UploadJobData } from '../audit/audit.processor';
+import { cpfUtil } from '../utils/cpf.util';
+import { dateUtil } from '../utils/date.util';
 
 export const DEFAULT_PAGE = 1;
 export const DEFAULT_PER_PAGE = 20;
@@ -24,8 +27,48 @@ export class PaymentService {
     private readonly queueService: QueueService,
   ) {}
 
-  async create(createPaymentDto: CreatePaymentDto[]) {
-    return this.paymentRepository.save(createPaymentDto);
+  async create({ audit_id, fileContent }: UploadJobData) {
+    const lines = fileContent.split('\r\n');
+
+    let paymentPayload: CreatePaymentDto[] = [];
+    const LIMIT = 4400;
+
+    try {
+      for (const line of lines) {
+        if (line.trim()) {
+          const name = line.slice(0, 15).trimStart().trimEnd();
+          const age = Number(line.slice(15, 19));
+          const address = line.slice(19, 53).trimStart().trimEnd();
+          const cpf = cpfUtil.formatCpf(line.slice(53, 64));
+          const total = Number(line.slice(64, 80));
+          const birth_date = dateUtil.toDBFormat(line.slice(80, 88));
+
+          paymentPayload.push({
+            name,
+            age,
+            address,
+            cpf,
+            total,
+            birth_date,
+            audit_id,
+          });
+
+          if (paymentPayload.length === LIMIT) {
+            await this.paymentRepository.save(paymentPayload);
+            paymentPayload = [];
+          }
+        }
+      }
+
+      if (paymentPayload.length > 0) {
+        await this.paymentRepository.save(paymentPayload);
+      }
+    } catch (error) {
+      console.error('Error processing file upload: ', error);
+      throw new BadRequestException(
+        'Ocorreu um erro ao processar o arquivo. Verifique os dados e tente novamente.',
+      );
+    }
   }
 
   async paginate({ page, audit_id }: PaginatePaymentDto): Promise<Pagination> {

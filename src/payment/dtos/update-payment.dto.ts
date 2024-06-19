@@ -3,6 +3,7 @@ import {
   IsInt,
   IsOptional,
   IsString,
+  Length,
   MaxLength,
 } from 'class-validator';
 
@@ -23,7 +24,7 @@ export class UpdatePaymentDto {
 
   @IsOptional()
   @IsString()
-  @MaxLength(11)
+  @Length(14, 14)
   cpf?: string;
 
   @IsOptional()

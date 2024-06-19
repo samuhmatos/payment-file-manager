@@ -20,6 +20,7 @@ import {
 import { emptyJobsMock, jobsMock } from '../../queue/__mocks__/queue.mocks';
 import { returnDeleteMock } from '../../__mocks__/return-delete.mock';
 import { auditMock } from '../../audit/__mocks__/audit.mock';
+import { createUploadProcessor } from '../../audit/__mocks__/audit-processor.mock';
 
 describe('PaymentService', () => {
   let service: PaymentService;
@@ -62,10 +63,9 @@ describe('PaymentService', () => {
   });
 
   it('should save the payments to the repository', async () => {
-    const result = await service.create(createPaymentMock);
+    await service.create(createUploadProcessor.data);
 
     expect(paymentRepository.save).toHaveBeenCalledWith(createPaymentMock);
-    expect(result).toEqual([paymentMock]);
   });
 
   describe('paginate', () => {

@@ -3,13 +3,14 @@ import { auditMock } from '../../audit/__mocks__/audit.mock';
 import { CreatePaymentDto } from '../dtos/create-payment.dto';
 import { UpdatePaymentDto } from '../dtos/update-payment.dto';
 import { Payment } from '../entities/payment.entity';
+import { cpfUtil } from '../../utils/cpf.util';
 
 export const paymentMock: Payment = {
   id: 1,
   name: 'Kathryne Lockma',
   age: 51,
   address: '845 Fahey Summit East Dillon',
-  cpf: '11626761422',
+  cpf: cpfUtil.formatCpf('11626761422'),
   total: 76382,
   birth_date: dateUtil.toDBFormat('20230321'),
   audit_id: auditMock.id,
