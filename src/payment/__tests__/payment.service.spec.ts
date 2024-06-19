@@ -18,6 +18,7 @@ import {
 } from '../__mocks__/paginate.mock';
 import { uploadMock } from '../../upload/__mocks__/upload.mocks';
 import { emptyJobsMock, jobsMock } from '../../queue/__mocks__/queue.mocks';
+import { returnDeleteMock } from '../../__mocks__/return-delete.mock';
 
 describe('PaymentService', () => {
   let service: PaymentService;
@@ -34,6 +35,7 @@ describe('PaymentService', () => {
             save: jest.fn().mockResolvedValue([paymentMock]),
             findAndCount: jest.fn().mockResolvedValue(paginateFindAndCountMock),
             findOneBy: jest.fn().mockResolvedValue(paymentMock),
+            delete: jest.fn().mockResolvedValue(returnDeleteMock),
           },
         },
         {
@@ -128,6 +130,22 @@ describe('PaymentService', () => {
       expect(
         service.update(updatePaymentMock, paymentMock.upload_id),
       ).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('remove', () => {
+    it('should remove', async () => {
+      const deleted = await service.remove(paymentMock.id);
+
+      expect(deleted).toEqual(returnDeleteMock);
+    });
+
+    it('should throw exception if payment id not found', async () => {
+      jest.spyOn(paymentRepository, 'findOneBy').mockResolvedValue(undefined);
+
+      expect(service.remove(paymentMock.upload_id)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });

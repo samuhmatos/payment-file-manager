@@ -7,6 +7,7 @@ import {
   queryPaginateMock,
 } from '../__mocks__/paginate.mock';
 import { paymentMock, updatePaymentMock } from '../__mocks__/payment.mock';
+import { returnDeleteMock } from '../../__mocks__/return-delete.mock';
 
 describe('PaymentController', () => {
   let controller: PaymentController;
@@ -21,6 +22,7 @@ describe('PaymentController', () => {
           useValue: {
             paginate: jest.fn().mockResolvedValue(paginateResultMock),
             update: jest.fn().mockResolvedValue(paymentMock),
+            remove: jest.fn().mockResolvedValue(returnDeleteMock),
           },
         },
       ],
@@ -75,6 +77,24 @@ describe('PaymentController', () => {
       expect(
         controller.update(paymentMock.id, updatePaymentMock),
       ).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('remove', () => {
+    it('should remove', async () => {
+      const deletedResult = await controller.remove(paymentMock.id);
+
+      expect(deletedResult).toEqual({ message: 'Apagado com sucesso' });
+    });
+
+    it('should throw exception if id not found', () => {
+      jest
+        .spyOn(paymentService, 'remove')
+        .mockRejectedValue(new NotFoundException());
+
+      expect(controller.remove(paymentMock.id)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });

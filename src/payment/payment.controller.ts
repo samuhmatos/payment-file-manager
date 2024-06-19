@@ -1,6 +1,15 @@
-import { Body, Controller, Get, Param, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { UpdatePaymentDto } from './dtos/update-payment.dto';
+import { ReturnDeleteResultDto } from '../dtos/return-delete-result.dto';
 
 @Controller('payment')
 export class PaymentController {
@@ -23,5 +32,12 @@ export class PaymentController {
     @Body() updatePaymentDto: UpdatePaymentDto,
   ) {
     return this.paymentService.update(updatePaymentDto, id);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: number) {
+    const deletedResult = await this.paymentService.remove(id);
+
+    return new ReturnDeleteResultDto(deletedResult);
   }
 }

@@ -86,4 +86,12 @@ export class PaymentService {
       ...params,
     });
   }
+
+  async remove(id: number) {
+    await this.findById(id);
+
+    return this.paymentRepository.delete({
+      id,
+    });
+  }
 }
