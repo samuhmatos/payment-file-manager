@@ -5,5 +5,5 @@ export class CreatePaymentDto {
   cpf: string;
   total: number;
   audit_id: number;
-  birth_date: string;
+  birth_date: Date;
 }

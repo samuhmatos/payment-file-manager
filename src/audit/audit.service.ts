@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Audit, AuditRepository } from './entities/audit.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateAuditDto } from './dtos/create-audit.dto';
@@ -6,8 +10,9 @@ import { QueueService } from '../queue/queue.service';
 import { UploadJobData } from './audit.processor';
 import { CreatePaymentDto } from '../payment/dtos/create-payment.dto';
 import { PaymentService } from '../payment/payment.service';
-import { ReturnPaymentDto } from 'src/payment/dtos/return-payment.dto';
+import { ReturnPaymentDto } from '../payment/dtos/return-payment.dto';
 import { json2csv } from 'json-2-csv';
+import { dateUtil } from '../utils/date.util';
 
 @Injectable()
 export class AuditService {
@@ -35,7 +40,7 @@ export class AuditService {
           const address = line.slice(19, 53).trimStart().trimEnd();
           const cpf = line.slice(53, 64);
           const total = Number(line.slice(64, 80));
-          const birth_date = line.slice(80, 88).trimStart().trimEnd();
+          const birth_date = dateUtil.toDBFormat(line.slice(80, 88));
 
           paymentPayload.push({
             name,
@@ -59,7 +64,9 @@ export class AuditService {
       }
     } catch (error) {
       console.error('Error processing file upload: ', error);
-      throw error;
+      throw new BadRequestException(
+        'Ocorreu um erro ao processar o arquivo. Verifique os dados e tente novamente.',
+      );
     } finally {
       console.timeEnd();
     }

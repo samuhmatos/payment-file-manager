@@ -8,7 +8,7 @@ export class ReturnPaymentDto {
   address: string;
   cpf: string;
   total: number;
-  birth_date: string;
+  birth_date: Date;
 
   audit?: Audit;
 

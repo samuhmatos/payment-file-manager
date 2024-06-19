@@ -32,8 +32,8 @@ export class Payment {
   @Column({ nullable: false, type: 'float' })
   total: number;
 
-  @Column({ nullable: false, length: '8', type: 'varchar' })
-  birth_date: string;
+  @Column({ nullable: false, type: 'date' })
+  birth_date: Date;
 
   @Column({ nullable: false, type: 'int' })
   audit_id: number;

@@ -1,3 +1,4 @@
+import { dateUtil } from '../../utils/date.util';
 import { auditMock } from '../../audit/__mocks__/audit.mock';
 import { CreatePaymentDto } from '../dtos/create-payment.dto';
 import { UpdatePaymentDto } from '../dtos/update-payment.dto';
@@ -10,7 +11,7 @@ export const paymentMock: Payment = {
   address: '845 Fahey Summit East Dillon',
   cpf: '11626761422',
   total: 76382,
-  birth_date: '20230321',
+  birth_date: dateUtil.toDBFormat('20230321'),
   audit_id: auditMock.id,
   created_at: new Date(),
   updated_at: new Date(),

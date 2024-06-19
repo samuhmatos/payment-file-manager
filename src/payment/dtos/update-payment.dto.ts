@@ -1,4 +1,10 @@
-import { IsInt, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsDateString,
+  IsInt,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 export class UpdatePaymentDto {
   @IsOptional()
@@ -24,7 +30,7 @@ export class UpdatePaymentDto {
   total?: number;
 
   @IsOptional()
-  @IsString()
-  @MaxLength(8)
-  birth_date?: string;
+  @IsDateString()
+  @MaxLength(10)
+  birth_date?: Date;
 }
